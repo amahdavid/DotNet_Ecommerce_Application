@@ -9,18 +9,17 @@ namespace Ecommerce_Application.Services
     {
         private readonly AppDbContext _context;
         private readonly IHttpContextAccessor _contextAccessor;
-        private readonly ISession _session;
 
-        public CartService(AppDbContext context, IHttpContextAccessor contextAccessor, ISession session)
+        public CartService(AppDbContext context, IHttpContextAccessor contextAccessor)
         {
             _context = context;
             _contextAccessor = contextAccessor;
-            _session = session;
         }
 
         public List<CartItem> GetCart()
         {
-            var cart = _session.GetObjectFromJson<List<CartItem>>("Cart");
+            var session = _contextAccessor.HttpContext.Session;
+            var cart = session.GetObjectFromJson<List<CartItem>>("Cart");
             return cart ?? new List<CartItem>();
         }
 
@@ -56,7 +55,8 @@ namespace Ecommerce_Application.Services
 
         private void SaveCart(List<CartItem> cart)
         {
-            _session.SetObjectAsJson("Cart", cart);
+            var session = _contextAccessor.HttpContext.Session;
+            session.SetObjectAsJson("Cart", cart);
         }
     }
 }

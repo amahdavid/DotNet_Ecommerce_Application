@@ -1,23 +1,31 @@
 using Ecommerce_Application.Data;
+using Ecommerce_Application.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register Identity services
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services.AddControllersWithViews(); // Add this for MVC support if you plan to use controllers
-builder.Services.AddRazorPages(); // Optional, but you can also keep this at the end
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true; // Keep the session cookie HTTP-only
+    options.Cookie.IsEssential = true; // Make it essential for GDPR purposes
+});
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<CartService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -25,20 +33,15 @@ if (!app.Environment.IsDevelopment())
 }
 else
 {
-    // Optional: For better debugging in development mode
     app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
 app.UseSession();
-
-app.UseAuthentication(); // Make sure to add this to use authentication
+app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapRazorPages();
-app.MapControllers(); // Add this line if you're using controllers
-
+app.MapControllers();
 app.Run();

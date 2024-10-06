@@ -15,7 +15,6 @@
         <label for="category">Category:</label>
         <select name="category" class="form-control">
             <option value="">All Categories</option>
-            <!-- Add more categories here -->
             <option value="Electronics">Electronics</option>
             <option value="Clothing">Clothing</option>
         </select>
@@ -41,6 +40,7 @@
                 <th>Name</th>
                 <th>Category</th>
                 <th>Price</th>
+                <th></th> <!-- Extra column for the Add to Cart button -->
             </tr>
         </thead>
         <tbody>
@@ -50,6 +50,12 @@
                     <td>@product.Name</td>
                     <td>@product.Category</td>
                     <td>@product.Price.ToString("C")</td>
+                    <td>
+                        <form method="post" asp-page-handler="AddToCart">
+                            <input type="hidden" name="productId" value="@product.Id" />
+                            <button type="submit" class="btn btn-success">Add to Cart</button>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>

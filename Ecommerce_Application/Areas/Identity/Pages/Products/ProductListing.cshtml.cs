@@ -1,5 +1,7 @@
 using Ecommerce_Application.Data;
 using Ecommerce_Application.Models;
+using Ecommerce_Application.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +10,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
     public class ProductListingModel : PageModel
     {
         private readonly AppDbContext _context;
+        private  readonly CartService _cartService;
 
         public ProductListingModel(AppDbContext context)
         {
@@ -23,7 +26,9 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
             // search by name or description
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                productsQuery = productsQuery.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm));
+                searchTerm = searchTerm.Trim().ToLower();
+
+                productsQuery = productsQuery.Where(p => p.Name.ToLower().Contains(searchTerm) || p.Description.ToLower().Contains(searchTerm));
             }
 
             // filter by category
@@ -43,6 +48,12 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
 
             // execute the query and return results
             Products = await productsQuery.ToListAsync() ?? new List<Product>();
+        }
+
+        public IActionResult OnPostAddToCart(int productId)
+        {
+            _cartService.AddToCart(productId);
+            return RedirectToPage();
         }
     }
 }
