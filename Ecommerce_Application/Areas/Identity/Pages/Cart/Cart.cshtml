@@ -1,0 +1,43 @@
+﻿@page
+@model Ecommerce_Application.Areas.Identity.Pages.Cart.CartModel
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<h2>Your Shopping Cart</h2>
+
+@if (Model.CartItems.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Product.Price.ToString("C")</td>
+                    <td>
+                        <form method="post" asp-page-handler="Remove">
+                            <input type="hidden" name="productId" value="@item.Product.Id" />
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>Total: @Model.CartItems.Sum(i => i.Product.Price * i.Quantity).ToString("C")</p>
+}
+else
+{
+    <p>Your cart is empty.</p>
+}
+
