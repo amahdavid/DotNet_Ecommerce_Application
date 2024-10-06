@@ -12,12 +12,13 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
         private readonly AppDbContext _context;
         private  readonly CartService _cartService;
 
-        public ProductListingModel(AppDbContext context)
+        public ProductListingModel(AppDbContext context, CartService cartService)
         {
             _context = context;
+            _cartService = cartService;
         }
 
-        public IEnumerable<Product> Products { get; set; } // Use IEnumerable instead of List
+        public IEnumerable<Product> Products { get; set; }
 
         public async Task OnGetAsync(string searchTerm, string category, string priceRange)
         {
@@ -27,7 +28,6 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
             if (!string.IsNullOrEmpty(searchTerm))
             {
                 searchTerm = searchTerm.Trim().ToLower();
-
                 productsQuery = productsQuery.Where(p => p.Name.ToLower().Contains(searchTerm) || p.Description.ToLower().Contains(searchTerm));
             }
 
