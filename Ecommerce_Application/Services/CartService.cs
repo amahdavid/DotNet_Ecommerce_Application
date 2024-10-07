@@ -2,6 +2,7 @@
 using Ecommerce_Application.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Ecommerce_Application.Services
 {
@@ -40,6 +41,7 @@ namespace Ecommerce_Application.Services
                 }
             }
             SaveCart(cart);
+            System.Diagnostics.Debug.WriteLine($"Cart updated: {JsonConvert.SerializeObject(cart)}"); // Debug output
         }
 
         public void RemoveFromCart(int productId)
@@ -51,6 +53,14 @@ namespace Ecommerce_Application.Services
                 cart.Remove(existingItem);
             }
             SaveCart(cart);
+        }
+
+        public decimal GetTotalAmount()
+        {
+            var cart = GetCart();
+            var total = cart.Sum(item => item.Product.Price * item.Quantity);
+            System.Diagnostics.Debug.WriteLine($"Calculated Total Amount: {total}"); // Log the total amount
+            return total;
         }
 
         private void SaveCart(List<CartItem> cart)

@@ -6,10 +6,26 @@
 
 <h2>Checkout</h2>
 
+@if (Model.CartItems != null && Model.CartItems.Count > 0)
+{
+    <h3>Your Items</h3>
+    <ul>
+        @foreach (var item in Model.CartItems)
+        {
+            <li>@item.Product.Name - @item.Quantity x @item.Product.Price.ToString("C")</li>
+        }
+    </ul>
+    <p>Total: @Model.TotalAmount.ToString("C")</p>
+}
+else
+{
+    <p>Your cart is empty.</p>
+}
+
 <form method="post" asp-page-handler="CreateCheckout">
-    <input type="hidden" name="productName" value="Sample Product" />
-    <input type="hidden" name="amount" value="5000" /> <!-- Amount in cents -->
-    <button type="submit" class="btn btn-primary">Pay $50.00</button>
+    <input type="hidden" name="productName" value="Your Products" />
+    <input type="hidden" name="amount" value="@Model.TotalAmount" />
+    <button type="submit" class="btn btn-primary">Pay @Model.TotalAmount.ToString("C")</button>
 </form>
 
 @if (Model.CheckoutSessionId != null)
@@ -20,3 +36,4 @@
         stripe.redirectToCheckout({ sessionId: '@Model.CheckoutSessionId' });
     </script>
 }
+
