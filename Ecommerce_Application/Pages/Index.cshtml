@@ -6,11 +6,10 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-
     <!-- Add buttons to navigate to Login and Product Listing pages -->
     <div class="mt-4">
         <a asp-area = "Identity" asp-page="/Account/Login" class="btn btn-primary btn-lg">Login</a>
-        <a asp-area = "Identity" asp-page="/Products/ProductListing" class="btn btn-success btn-lg">View Products</a>
+        <a asp-area = "Identity" asp-page="/Products/ProductListing" class="btn btn-primary btn-lg">View Products</a>
+        <a asp-area="Identity" asp-page="/Cart/Cart" class="btn btn-primary btn-lg">View Items In Cart</a>
     </div>
 </div>
