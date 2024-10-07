@@ -1,0 +1,22 @@
+﻿@page
+@model Ecommerce_Application.Areas.Identity.Pages.Payment.PaymentModel
+@{
+    ViewData["Title"] = "Payment";
+}
+
+<h2>Checkout</h2>
+
+<form method="post" asp-page-handler="CreateCheckout">
+    <input type="hidden" name="productName" value="Sample Product" />
+    <input type="hidden" name="amount" value="5000" /> <!-- Amount in cents -->
+    <button type="submit" class="btn btn-primary">Pay $50.00</button>
+</form>
+
+@if (Model.CheckoutSessionId != null)
+{
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        var stripe = Stripe('@Model.PublishableKey');
+        stripe.redirectToCheckout({ sessionId: '@Model.CheckoutSessionId' });
+    </script>
+}
