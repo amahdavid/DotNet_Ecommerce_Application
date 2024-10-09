@@ -6,6 +6,13 @@
 
 <h2>Checkout</h2>
 
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger">
+        @Model.ErrorMessage
+    </div>
+}
+
 @if (Model.CartItems != null && Model.CartItems.Count > 0)
 {
     <h3>Your Items</h3>
@@ -36,4 +43,3 @@ else
         stripe.redirectToCheckout({ sessionId: '@Model.CheckoutSessionId' });
     </script>
 }
-

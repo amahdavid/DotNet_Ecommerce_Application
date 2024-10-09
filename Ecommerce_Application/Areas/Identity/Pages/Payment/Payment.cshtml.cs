@@ -14,12 +14,14 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
         private readonly CartService _cartService;
         private readonly StripeSettings _stripeSettings;
         private readonly IHttpContextAccessor _contextAccessor;
+
         public string CheckoutSessionId { get; set; }
         public decimal TotalAmount { get; set; }
         public string PublishableKey => _stripeSettings.PublishableKey;
         public List<CartItem> CartItems { get; set; }
+        public string ErrorMessage { get; set; } // New property for error messages
 
-        public PaymentModel(PaymentService paymentService, CartService cartService,IOptions<StripeSettings> stripeOptions, IHttpContextAccessor contextAccessor)
+        public PaymentModel(PaymentService paymentService, CartService cartService, IOptions<StripeSettings> stripeOptions, IHttpContextAccessor contextAccessor)
         {
             _paymentService = paymentService;
             _cartService = cartService;
@@ -41,14 +43,23 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
             else
             {
                 System.Diagnostics.Debug.WriteLine("Cart items not found in session.");
+                ErrorMessage = "Your cart items could not be retrieved.";
             }
         }
 
         public async Task<IActionResult> OnPostCreateCheckout(string productName, decimal amount)
         {
-            var session = await _paymentService.CreateCheckoutSessionAsync(User.Identity.Name, productName, amount);
-            CheckoutSessionId = session.Id;
-            return Page();
+            try
+            {
+                var session = await _paymentService.CreateCheckoutSessionAsync(User.Identity.Name, productName, amount);
+                CheckoutSessionId = session.Id;
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "An error occurred while creating the checkout session: " + ex.Message;
+                return Page();
+            }
         }
     }
 }
