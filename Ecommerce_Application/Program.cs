@@ -3,6 +3,7 @@ using Ecommerce_Application.Data;
 using Ecommerce_Application.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,7 +28,11 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<CartService>();
-builder.Services.AddScoped<PaymentService>();
+builder.Services.AddScoped<PaymentService>(serviceProvider =>
+{
+    var stripeSettings = serviceProvider.GetRequiredService<IOptions<StripeSettings>>().Value;
+    return new PaymentService(stripeSettings.SecretKey);
+});
 
 var app = builder.Build();
 StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];

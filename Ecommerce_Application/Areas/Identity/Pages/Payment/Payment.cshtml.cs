@@ -11,33 +11,32 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
     public class PaymentModel : PageModel
     {
         private readonly PaymentService _paymentService;
+        private readonly CartService _cartService;
         private readonly StripeSettings _stripeSettings;
         private readonly IHttpContextAccessor _contextAccessor;
         public string CheckoutSessionId { get; set; }
-        public long TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         public string PublishableKey => _stripeSettings.PublishableKey;
-        public List<CartItem> CartItems { get; set; } // New property for cart items
+        public List<CartItem> CartItems { get; set; }
 
-        public PaymentModel(PaymentService paymentService, IOptions<StripeSettings> stripeOptions, IHttpContextAccessor contextAccessor)
+        public PaymentModel(PaymentService paymentService, CartService cartService,IOptions<StripeSettings> stripeOptions, IHttpContextAccessor contextAccessor)
         {
             _paymentService = paymentService;
+            _cartService = cartService;
             _stripeSettings = stripeOptions.Value;
-            _contextAccessor = contextAccessor; // Initialize _contextAccessor
-            CartItems = new List<CartItem>(); // Initialize cart items
+            _contextAccessor = contextAccessor;
+            CartItems = new List<CartItem>();
         }
 
-        public void OnGet(long totalAmount)
+        public void OnGet(decimal totalAmount)
         {
             TotalAmount = totalAmount;
-            System.Diagnostics.Debug.WriteLine("Total amount: " + TotalAmount);
-
-            // Attempt to get cart items from session
             var session = _contextAccessor.HttpContext.Session;
-            var cartItemsJson = session.GetString("Cart"); // Retrieve from session
+            var cartItemsJson = session.GetString("Cart");
 
             if (!string.IsNullOrEmpty(cartItemsJson))
             {
-                CartItems = JsonConvert.DeserializeObject<List<CartItem>>(cartItemsJson); // Deserialize the cart items
+                CartItems = JsonConvert.DeserializeObject<List<CartItem>>(cartItemsJson);
             }
             else
             {
@@ -45,9 +44,9 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
             }
         }
 
-        public IActionResult OnPostCreateCheckout(string productName, long amount)
+        public async Task<IActionResult> OnPostCreateCheckout(string productName, decimal amount)
         {
-            var session = _paymentService.CreateCheckoutSessionAsync(User.Identity.Name, productName, amount).Result; // Handle async properly in production
+            var session = await _paymentService.CreateCheckoutSessionAsync(User.Identity.Name, productName, amount);
             CheckoutSessionId = session.Id;
             return Page();
         }
