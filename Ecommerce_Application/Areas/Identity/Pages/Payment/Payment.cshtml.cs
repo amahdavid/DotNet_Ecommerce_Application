@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace Ecommerce_Application.Areas.Identity.Pages.Payment
 {
@@ -14,19 +15,21 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
         private readonly CartService _cartService;
         private readonly StripeSettings _stripeSettings;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ILogger<PaymentModel> _logger;
 
         public string CheckoutSessionId { get; set; }
         public decimal TotalAmount { get; set; }
         public string PublishableKey => _stripeSettings.PublishableKey;
         public List<CartItem> CartItems { get; set; }
-        public string ErrorMessage { get; set; } // New property for error messages
+        public string ErrorMessage { get; set; }
 
-        public PaymentModel(PaymentService paymentService, CartService cartService, IOptions<StripeSettings> stripeOptions, IHttpContextAccessor contextAccessor)
+        public PaymentModel(PaymentService paymentService, CartService cartService, IOptions<StripeSettings> stripeOptions, IHttpContextAccessor contextAccessor, ILogger<PaymentModel> logger)
         {
             _paymentService = paymentService;
             _cartService = cartService;
             _stripeSettings = stripeOptions.Value;
             _contextAccessor = contextAccessor;
+            _logger = logger;
             CartItems = new List<CartItem>();
         }
 
@@ -42,7 +45,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Cart items not found in session.");
+                _logger.LogWarning("Cart items not found in session.");
                 ErrorMessage = "Your cart items could not be retrieved.";
             }
         }
@@ -57,6 +60,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "An error occurred while creating the checkout session.");
                 ErrorMessage = "An error occurred while creating the checkout session: " + ex.Message;
                 return Page();
             }

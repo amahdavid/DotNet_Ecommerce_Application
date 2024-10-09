@@ -71,7 +71,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Cart
             {
                 _logger.LogError(ex, "An error occurred during the checkout process.");
                 ErrorMessage = "There was an issue with the checkout process. Please try again.";
-                return RedirectToPage();  // Optionally pass ErrorMessage to the view
+                return RedirectToPage();
             }
         }
     }

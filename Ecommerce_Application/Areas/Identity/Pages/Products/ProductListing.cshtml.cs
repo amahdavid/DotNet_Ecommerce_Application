@@ -4,6 +4,7 @@ using Ecommerce_Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace Ecommerce_Application.Areas.Identity.Pages.Products
 {
@@ -11,11 +12,13 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
     {
         private readonly AppDbContext _context;
         private readonly CartService _cartService;
+        private readonly ILogger<ProductListingModel> _logger;
 
-        public ProductListingModel(AppDbContext context, CartService cartService)
+        public ProductListingModel(AppDbContext context, CartService cartService, ILogger<ProductListingModel> logger)
         {
             _context = context;
             _cartService = cartService;
+            _logger = logger;
         }
 
         public IEnumerable<Product> Products { get; set; }
@@ -54,7 +57,8 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
             }
             catch (Exception ex)
             {
-                ErrorMessage = "An error occurred while retrieving products: " + ex.Message;
+                _logger.LogError(ex, "An error occurred while retrieving products.");
+                ErrorMessage = "An error occurred while retrieving products.";
                 Products = new List<Product>();
             }
         }
@@ -68,7 +72,8 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
             }
             catch (Exception ex)
             {
-                ErrorMessage = "An error occurred while adding the product to the cart: " + ex.Message;
+                _logger.LogError(ex, "An error occurred while adding the product to the cart.");
+                ErrorMessage = "An error occurred while adding the product to the cart.";
                 return Page();
             }
         }

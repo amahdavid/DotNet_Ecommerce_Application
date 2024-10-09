@@ -1,15 +1,20 @@
 ﻿using Stripe;
 using Stripe.Checkout;
+using Microsoft.Extensions.Logging;
 
 namespace Ecommerce_Application.Services
 {
     public class PaymentService
     {
-        public PaymentService(string stripeSecretKey) 
+        private readonly ILogger<PaymentService> _logger;
+
+        public PaymentService(string stripeSecretKey, ILogger<PaymentService> logger)
         {
             StripeConfiguration.ApiKey = stripeSecretKey;
+            _logger = logger;
         }
-        public async Task<Session> CreateCheckoutSessionAsync(string custormerEmail, string productName, decimal amount)
+
+        public async Task<Session> CreateCheckoutSessionAsync(string customerEmail, string productName, decimal amount)
         {
             var amountInCents = (long)(amount * 100);
             var options = new SessionCreateOptions
@@ -35,9 +40,24 @@ namespace Ecommerce_Application.Services
                 SuccessUrl = "http://localhost:5212/Identity/Payment/PaymentSuccess",
                 CancelUrl = "http://localhost:5212/Identity/Payment/PaymentCancel",
             };
+
             var service = new SessionService();
-            var session = await service.CreateAsync(options);
-            return session;
+
+            try
+            {
+                var session = await service.CreateAsync(options);
+                return session;
+            }
+            catch (StripeException stripeEx)
+            {
+                _logger.LogError(stripeEx, "Stripe error while creating checkout session for product '{ProductName}': {Message}", productName, stripeEx.Message);
+                throw;
+            }
+            catch (Exception ex) // Catch all other exceptions
+            {
+                _logger.LogError(ex, "Error while creating checkout session for product '{ProductName}': {Message}", productName, ex.Message);
+                throw;
+            }
         }
     }
 }
