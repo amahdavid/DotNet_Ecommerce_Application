@@ -10,7 +10,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
     public class ProductListingModel : PageModel
     {
         private readonly AppDbContext _context;
-        private  readonly CartService _cartService;
+        private readonly CartService _cartService;
 
         public ProductListingModel(AppDbContext context, CartService cartService)
         {
@@ -19,41 +19,58 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
         }
 
         public IEnumerable<Product> Products { get; set; }
+        public string ErrorMessage { get; set; }
 
         public async Task OnGetAsync(string searchTerm, string category, string priceRange)
         {
-            var productsQuery = _context.Products.AsQueryable();
-
-            // search by name or description
-            if (!string.IsNullOrEmpty(searchTerm))
+            try
             {
-                searchTerm = searchTerm.Trim().ToLower();
-                productsQuery = productsQuery.Where(p => p.Name.ToLower().Contains(searchTerm) || p.Description.ToLower().Contains(searchTerm));
-            }
+                var productsQuery = _context.Products.AsQueryable();
 
-            // filter by category
-            if (!string.IsNullOrEmpty(category))
+                // Search by name or description
+                if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    searchTerm = searchTerm.Trim().ToLower();
+                    productsQuery = productsQuery.Where(p => p.Name.ToLower().Contains(searchTerm) || p.Description.ToLower().Contains(searchTerm));
+                }
+
+                // Filter by category
+                if (!string.IsNullOrEmpty(category))
+                {
+                    productsQuery = productsQuery.Where(p => p.Category == category);
+                }
+
+                // Filter by price range
+                if (!string.IsNullOrEmpty(priceRange))
+                {
+                    var priceRangeValues = priceRange.Split('-').Select(decimal.Parse).ToArray();
+                    var minPrice = priceRangeValues[0];
+                    var maxPrice = priceRangeValues[1];
+
+                    productsQuery = productsQuery.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
+                }
+
+                Products = await productsQuery.ToListAsync() ?? new List<Product>();
+            }
+            catch (Exception ex)
             {
-                productsQuery = productsQuery.Where(p => p.Category == category);
+                ErrorMessage = "An error occurred while retrieving products: " + ex.Message;
+                Products = new List<Product>();
             }
-
-            if (!string.IsNullOrEmpty(priceRange))
-            {
-                var priceRangeValues = priceRange.Split('-').Select(decimal.Parse).ToArray();
-                var minPrice = priceRangeValues[0];
-                var maxPrice = priceRangeValues[1];
-
-                productsQuery = productsQuery.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
-            }
-
-            // execute the query and return results
-            Products = await productsQuery.ToListAsync() ?? new List<Product>();
         }
 
         public IActionResult OnPostAddToCart(int productId)
         {
-            _cartService.AddToCart(productId);
-            return RedirectToPage();
+            try
+            {
+                _cartService.AddToCart(productId);
+                return RedirectToPage();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "An error occurred while adding the product to the cart: " + ex.Message;
+                return Page();
+            }
         }
     }
 }

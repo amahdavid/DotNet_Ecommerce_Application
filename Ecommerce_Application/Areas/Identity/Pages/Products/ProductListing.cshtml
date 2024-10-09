@@ -6,6 +6,13 @@
 
 <h2>Product Listing</h2>
 
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+        <div class="alert alert-danger">
+        @Model.ErrorMessage
+        </div>
+}
+
 <form method="get" asp-page="./ProductListing">
     <div class="form-group">
         <label for="searchTerm">Search:</label>
@@ -34,34 +41,34 @@
 
 @if (Model.Products != null && Model.Products.Any())
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th></th> <!-- Extra column for the Add to Cart button -->
-            </tr>
-        </thead>
-        <tbody>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th></th> <!-- Extra column for the Add to Cart button -->
+                </tr>
+            </thead>
+            <tbody>
             @foreach (var product in Model.Products)
             {
-                <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Category</td>
-                    <td>@product.Price.ToString("C")</td>
-                    <td>
-                        <form method="post" asp-page-handler="AddToCart">
-                            <input type="hidden" name="productId" value="@product.Id" />
-                            <button type="submit" class="btn btn-success">Add to Cart</button>
-                        </form>
-                    </td>
-                </tr>
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Category</td>
+                            <td>@product.Price.ToString("C")</td>
+                            <td>
+                                <form method="post" asp-page-handler="AddToCart">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <button type="submit" class="btn btn-success">Add to Cart</button>
+                                </form>
+                            </td>
+                        </tr>
             }
-        </tbody>
-    </table>
+            </tbody>
+        </table>
 }
 else
 {
-    <p>No products found.</p>
+        <p>No products found.</p>
 }
