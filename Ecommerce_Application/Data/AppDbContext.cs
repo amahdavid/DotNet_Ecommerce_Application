@@ -7,17 +7,7 @@ namespace Ecommerce_Application.Data
 {
     public class AppDbContext : IdentityDbContext<IdentityUser>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-            try
-            {
-                Database.EnsureCreated();
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("Database creation error: " + ex.Message);
-            }
-        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) {}
 
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }

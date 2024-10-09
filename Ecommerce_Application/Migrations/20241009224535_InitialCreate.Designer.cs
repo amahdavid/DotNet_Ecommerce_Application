@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce_Application.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241006222629_SeedIntialProducts")]
-    partial class SeedIntialProducts
+    [Migration("20241009224535_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,9 @@ namespace Ecommerce_Application.Migrations
 
             modelBuilder.Entity("Ecommerce_Application.Models.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CustomerCity")
                         .IsRequired()
@@ -68,11 +66,9 @@ namespace Ecommerce_Application.Migrations
 
             modelBuilder.Entity("Ecommerce_Application.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -100,16 +96,16 @@ namespace Ecommerce_Application.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("f5577664-8a25-42a0-a895-6559a582980e"),
                             Category = "Clothing",
-                            Description = "These are slick fairly used jordan 4's, size 11 US",
+                            Description = "These are slick fairly used Jordan 4's, size 11 US",
                             ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOP5xeXw3UgSMynW5S5r9kBt1s2RwdFZwMTA&s",
                             Name = "Jordan 4 Military Black",
                             Price = 450m
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("e7ea0a46-b370-49b5-b785-ff4e8c4b11f5"),
                             Category = "Electronics",
                             Description = "Latest Apple iPhone 13, 128GB, Black",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
@@ -118,12 +114,75 @@ namespace Ecommerce_Application.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("85781b7c-3d5d-48b4-b7f2-acb7ec46ab28"),
                             Category = "Electronics",
                             Description = "Wireless noise-canceling headphones",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
                             Name = "Sony WH-1000XM4 Headphones",
                             Price = 349.99m
+                        },
+                        new
+                        {
+                            Id = new Guid("d6bcc6a1-a736-41dc-a06a-a895ba4261ab"),
+                            Category = "Electronics",
+                            Description = "Samsung Galaxy S21 128GB, Phantom Gray",
+                            ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
+                            Name = "Samsung Galaxy S21",
+                            Price = 699.99m
+                        },
+                        new
+                        {
+                            Id = new Guid("66ad86d1-2f2e-401f-9b2d-986f55492c74"),
+                            Category = "Clothing",
+                            Description = "Nike Air Max 270 shoes, size 10 US, in Black/White",
+                            ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
+                            Name = "Nike Air Max 270",
+                            Price = 180m
+                        },
+                        new
+                        {
+                            Id = new Guid("fceb1cfb-7797-4896-a3c3-54a42c5c2f9a"),
+                            Category = "Electronics",
+                            Description = "Bose portable Bluetooth speaker, 360-degree sound",
+                            ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
+                            Name = "Bose SoundLink Revolve",
+                            Price = 199.99m
+                        },
+                        new
+                        {
+                            Id = new Guid("071694c9-a48e-494a-9969-c7c0fd743640"),
+                            Category = "Clothing",
+                            Description = "Adidas Ultraboost 21 shoes, size 9 US, Solar Red",
+                            ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
+                            Name = "Adidas Ultraboost 21",
+                            Price = 220m
+                        },
+                        new
+                        {
+                            Id = new Guid("187dd9e0-a3c1-4210-824f-2854f44c397c"),
+                            Category = "Electronics",
+                            Description = "Apple MacBook Air 13-inch, M1 chip, 256GB SSD",
+                            ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
+                            Name = "Apple MacBook Air M1",
+                            Price = 999.99m
+                        },
+                        new
+                        {
+                            Id = new Guid("7e38fb61-02ce-436c-a7e1-48abb52c13c7"),
+                            Category = "Clothing",
+                            Description = "North Face men's winter jacket, size Large, Black",
+                            ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
+                            Name = "North Face Men's Jacket",
+                            Price = 250m
+                        },
+                        new
+                        {
+                            Id = new Guid("0429e1bb-92d9-4cda-8877-d8980d342063"),
+                            Category = "Electronics",
+                            Description = "Sony PlayStation 5 console, 825GB, White",
+                            ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
+                            Name = "Sony PlayStation 5",
+                            Price = 499.99m
                         });
                 });
 

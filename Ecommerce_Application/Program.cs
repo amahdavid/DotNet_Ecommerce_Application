@@ -46,6 +46,7 @@ try
     // Register services
     builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     builder.Services.AddScoped<CartService>();
+    builder.Services.AddScoped<OrderService>();
     builder.Services.AddScoped<PaymentService>(serviceProvider =>
     {
         var stripeSettings = serviceProvider.GetRequiredService<IOptions<StripeSettings>>().Value;

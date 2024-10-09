@@ -30,10 +30,46 @@ else
 }
 
 <form method="post" asp-page-handler="CreateCheckout">
-    <input type="hidden" name="productName" value="Your Products" />
+    <div class="form-group">
+        <label asp-for="Order.Name">Name</label>
+        <input asp-for="Order.Name" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Order.Email">Email</label>
+        <input asp-for="Order.Email" type="email" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Order.Phone">Phone Number</label>
+        <input asp-for="Order.Phone" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Order.City">City</label>
+        <input asp-for="Order.City" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Order.Region">Province/State</label>
+        <input asp-for="Order.Region" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Order.PostalCode">Postal Code</label>
+        <input asp-for="Order.PostalCode" class="form-control" />
+    </div>
+
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="guestCheckout" name="isGuest" />
+        <label class="form-check-label" for="guestCheckout">Checkout as Guest</label>
+    </div>
+
     <input type="hidden" name="amount" value="@Model.TotalAmount" />
+    <input type="hidden" name="productName" value="@string.Join(", ", Model.CartItems.Select(i => i.Product.Name))" /> <!-- Include product names here -->
     <button type="submit" class="btn btn-primary">Pay @Model.TotalAmount.ToString("C")</button>
 </form>
+
 
 @if (Model.CheckoutSessionId != null)
 {

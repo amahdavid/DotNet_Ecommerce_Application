@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce_Application.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241009215522_UpdateProductSeedData")]
-    partial class UpdateProductSeedData
+    [Migration("20241009234137_UpdateOrderSchema")]
+    partial class UpdateOrderSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,52 +27,82 @@ namespace Ecommerce_Application.Migrations
 
             modelBuilder.Entity("Ecommerce_Application.Models.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CustomerCity")
+                    b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerEmail")
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerId")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerName")
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerPhone")
+                    b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerPostalCode")
+                    b.Property<string>("Region")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CustomerRegion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Ecommerce_Application.Models.Product", b =>
+            modelBuilder.Entity("Ecommerce_Application.Models.OrderItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItem");
+                });
+
+            modelBuilder.Entity("Ecommerce_Application.Models.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -100,7 +130,7 @@ namespace Ecommerce_Application.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = new Guid("3585b57e-e03b-4299-943a-b1e33634eb1f"),
                             Category = "Clothing",
                             Description = "These are slick fairly used Jordan 4's, size 11 US",
                             ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOP5xeXw3UgSMynW5S5r9kBt1s2RwdFZwMTA&s",
@@ -109,7 +139,7 @@ namespace Ecommerce_Application.Migrations
                         },
                         new
                         {
-                            Id = 2,
+                            Id = new Guid("55385e9c-1bc0-412d-b664-59eeb195f756"),
                             Category = "Electronics",
                             Description = "Latest Apple iPhone 13, 128GB, Black",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
@@ -118,7 +148,7 @@ namespace Ecommerce_Application.Migrations
                         },
                         new
                         {
-                            Id = 3,
+                            Id = new Guid("66db6a71-84a3-4e6d-b8c2-5613fcc9ae36"),
                             Category = "Electronics",
                             Description = "Wireless noise-canceling headphones",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
@@ -127,7 +157,7 @@ namespace Ecommerce_Application.Migrations
                         },
                         new
                         {
-                            Id = 4,
+                            Id = new Guid("8fad2c93-91e0-4d0c-9ae7-57feef9fe4fa"),
                             Category = "Electronics",
                             Description = "Samsung Galaxy S21 128GB, Phantom Gray",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
@@ -136,7 +166,7 @@ namespace Ecommerce_Application.Migrations
                         },
                         new
                         {
-                            Id = 5,
+                            Id = new Guid("eb6bd408-0f22-401e-81fc-cfcd30bc6926"),
                             Category = "Clothing",
                             Description = "Nike Air Max 270 shoes, size 10 US, in Black/White",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
@@ -145,7 +175,7 @@ namespace Ecommerce_Application.Migrations
                         },
                         new
                         {
-                            Id = 6,
+                            Id = new Guid("9569e5ab-7711-4fa6-aac8-930d1cfd1ceb"),
                             Category = "Electronics",
                             Description = "Bose portable Bluetooth speaker, 360-degree sound",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
@@ -154,7 +184,7 @@ namespace Ecommerce_Application.Migrations
                         },
                         new
                         {
-                            Id = 7,
+                            Id = new Guid("257bdf28-c37a-475a-b3bc-f2aa114d6a73"),
                             Category = "Clothing",
                             Description = "Adidas Ultraboost 21 shoes, size 9 US, Solar Red",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
@@ -163,7 +193,7 @@ namespace Ecommerce_Application.Migrations
                         },
                         new
                         {
-                            Id = 8,
+                            Id = new Guid("65f2573a-1922-43c8-9fb3-d73b09f066fc"),
                             Category = "Electronics",
                             Description = "Apple MacBook Air 13-inch, M1 chip, 256GB SSD",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
@@ -172,7 +202,7 @@ namespace Ecommerce_Application.Migrations
                         },
                         new
                         {
-                            Id = 9,
+                            Id = new Guid("de6465b3-41d0-4418-8d0d-4f5634981e1f"),
                             Category = "Clothing",
                             Description = "North Face men's winter jacket, size Large, Black",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
@@ -181,7 +211,7 @@ namespace Ecommerce_Application.Migrations
                         },
                         new
                         {
-                            Id = 10,
+                            Id = new Guid("1dec053f-d6a6-4453-8515-81cea7364d83"),
                             Category = "Electronics",
                             Description = "Sony PlayStation 5 console, 825GB, White",
                             ImageUrl = "https://www.svgrepo.com/show/508699/landscape-placeholder.svg",
@@ -392,6 +422,13 @@ namespace Ecommerce_Application.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Ecommerce_Application.Models.OrderItem", b =>
+                {
+                    b.HasOne("Ecommerce_Application.Models.Order", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -441,6 +478,11 @@ namespace Ecommerce_Application.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Ecommerce_Application.Models.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }
