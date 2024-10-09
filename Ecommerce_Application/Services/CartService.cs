@@ -32,7 +32,7 @@ namespace Ecommerce_Application.Services
             }
         }
 
-        public void AddToCart(int productId, int quantity = 1)
+        public void AddToCart(Guid productId, int quantity = 1)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace Ecommerce_Application.Services
             }
         }
 
-        public void RemoveFromCart(int productId)
+        public void RemoveFromCart(Guid productId)
         {
             try
             {

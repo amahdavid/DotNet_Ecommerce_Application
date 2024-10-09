@@ -62,7 +62,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Products
             }
         }
 
-        public IActionResult OnPostAddToCart(int productId)
+        public IActionResult OnPostAddToCart(Guid productId)
         {
             try
             {

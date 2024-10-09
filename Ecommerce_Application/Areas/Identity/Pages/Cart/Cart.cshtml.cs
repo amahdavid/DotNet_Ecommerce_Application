@@ -35,7 +35,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Cart
             }
         }
 
-        public IActionResult OnPostRemove(int productId)
+        public IActionResult OnPostRemove(Guid productId)
         {
             try
             {

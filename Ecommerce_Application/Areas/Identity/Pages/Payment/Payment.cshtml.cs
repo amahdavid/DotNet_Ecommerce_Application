@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Logging;
 
 namespace Ecommerce_Application.Areas.Identity.Pages.Payment
 {
