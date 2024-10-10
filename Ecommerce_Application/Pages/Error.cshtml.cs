@@ -24,5 +24,4 @@ namespace Ecommerce_Application.Pages
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
         }
     }
-
 }

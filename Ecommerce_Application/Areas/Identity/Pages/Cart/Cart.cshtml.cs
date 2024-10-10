@@ -1,8 +1,7 @@
+using Ecommerce_Application.Models;
+using Ecommerce_Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Ecommerce_Application.Services;
-using Ecommerce_Application.Models;
-using Microsoft.Extensions.Logging;
 
 namespace Ecommerce_Application.Areas.Identity.Pages.Cart
 {

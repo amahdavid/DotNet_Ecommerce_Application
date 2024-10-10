@@ -4,8 +4,8 @@ using Ecommerce_Application.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Stripe;
 using Serilog;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 

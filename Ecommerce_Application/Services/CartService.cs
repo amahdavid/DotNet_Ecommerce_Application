@@ -1,6 +1,5 @@
 ﻿using Ecommerce_Application.Data;
 using Ecommerce_Application.Models;
-using Microsoft.Extensions.Logging;
 
 namespace Ecommerce_Application.Services
 {
@@ -92,6 +91,20 @@ namespace Ecommerce_Application.Services
             {
                 _logger.LogError(ex, "Error calculating total amount.");
                 return 0;
+            }
+        }
+
+        public void ClearCart()
+        {
+            try
+            {
+                var session = _contextAccessor.HttpContext.Session;
+                session.SetObjectAsJson("Cart", new List<CartItem>());
+                _logger.LogInformation("Cart cleared successfully.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error clearing cart.");
             }
         }
 

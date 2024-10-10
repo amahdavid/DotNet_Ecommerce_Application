@@ -1,6 +1,5 @@
 ﻿using Stripe;
 using Stripe.Checkout;
-using Microsoft.Extensions.Logging;
 
 namespace Ecommerce_Application.Services
 {

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Ecommerce_Application.Pages
 {
@@ -16,5 +15,4 @@ namespace Ecommerce_Application.Pages
         {
         }
     }
-
 }

@@ -25,10 +25,13 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
         public string PublishableKey => _stripeSettings.PublishableKey;
         public List<CartItem> CartItems { get; set; }
         public string ErrorMessage { get; set; }
+
         [BindProperty]
         public Order Order { get; set; } = new Order();
 
-        public PaymentModel(PaymentService paymentService, CartService cartService, OrderService orderService, IOptions<StripeSettings> stripeOptions, IHttpContextAccessor contextAccessor, ILogger<PaymentModel> logger)
+        public PaymentModel(PaymentService paymentService, CartService cartService,
+            OrderService orderService, IOptions<StripeSettings> stripeOptions, IHttpContextAccessor contextAccessor,
+            ILogger<PaymentModel> logger)
         {
             _paymentService = paymentService;
             _cartService = cartService;
@@ -60,19 +63,18 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
         {
             try
             {
-                // Generate a temporary customer ID for guests
                 Guid customerId = isGuest ? Guid.NewGuid() : Guid.Empty; // Temporary ID for guests
 
                 if (!isGuest)
                 {
-                    // Parse User.Identity.Name into a Guid
                     if (!string.IsNullOrEmpty(User.Identity.Name) && Guid.TryParse(User.Identity.Name, out var parsedId))
                     {
-                        customerId = parsedId; // Assign the parsed Guid for logged-in users
+                        customerId = parsedId;
                     }
                 }
 
                 var cartItems = _cartService.GetCart();
+                amount = _cartService.GetTotalAmount();
                 var order = new Order
                 {
                     Name = Order.Name,
@@ -81,13 +83,16 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
                     City = Order.City,
                     Region = Order.Region,
                     PostalCode = Order.PostalCode,
-                    CustomerId = customerId // Set CustomerId here
+                    CustomerId = customerId,
+                    TotalAmount = amount,
+                    OrderDate = DateTime.UtcNow
                 };
 
                 var savedOrder = await _orderService.CreateOrderAsync(order);
 
                 var session = await _paymentService.CreateCheckoutSessionAsync(order.Email, productName, amount);
                 CheckoutSessionId = session.Id;
+                _cartService.ClearCart();
                 return Page();
             }
             catch (DbUpdateException dbEx)
