@@ -1,11 +1,13 @@
 using Ecommerce_Application.Configurations;
 using Ecommerce_Application.Models;
 using Ecommerce_Application.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.Security.Claims;
 using Order = Ecommerce_Application.Models.Order;
 using OrderService = Ecommerce_Application.Services.OrderService;
 
@@ -19,6 +21,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
         private readonly OrderService _orderService;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly ILogger<PaymentModel> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
 
         public string CheckoutSessionId { get; set; }
         public decimal TotalAmount { get; set; }
@@ -29,9 +32,16 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
         [BindProperty]
         public Order Order { get; set; } = new Order();
 
-        public PaymentModel(PaymentService paymentService, CartService cartService,
-            OrderService orderService, IOptions<StripeSettings> stripeOptions, IHttpContextAccessor contextAccessor,
-            ILogger<PaymentModel> logger)
+        public PaymentModel
+            (
+            PaymentService paymentService,
+            CartService cartService,
+            OrderService orderService,
+            IOptions<StripeSettings> stripeOptions,
+            IHttpContextAccessor contextAccessor,
+            ILogger<PaymentModel> logger,
+            UserManager<IdentityUser> userManager
+            )
         {
             _paymentService = paymentService;
             _cartService = cartService;
@@ -39,6 +49,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
             _contextAccessor = contextAccessor;
             _orderService = orderService;
             _logger = logger;
+            _userManager = userManager; // Assign UserManager
             CartItems = new List<CartItem>();
         }
 
@@ -59,26 +70,30 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
             }
         }
 
-        public async Task<IActionResult> OnPostCreateCheckout(string productName, decimal amount, bool isGuest)
+        public async Task<IActionResult> OnPostCreateCheckout(string productName, decimal amount, bool isGuest = false)
         {
             try
             {
-                Guid customerId = isGuest ? Guid.NewGuid() : Guid.Empty; // Temporary ID for guests
-
-                if (!isGuest)
+                // If the user is not a guest and not authenticated, redirect to the login page
+                if (!isGuest && !User.Identity.IsAuthenticated)
                 {
-                    if (!string.IsNullOrEmpty(User.Identity.Name) && Guid.TryParse(User.Identity.Name, out var parsedId))
-                    {
-                        customerId = parsedId;
-                    }
+                    return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = "/Identity/Payment" });
                 }
 
+                // Retrieve the user's email
+                var userEmail = isGuest ? Order.Email : User.FindFirstValue(ClaimTypes.Email);
+
+                // Generate a temporary ID for guest users
+                string customerId = isGuest ? Guid.NewGuid().ToString() : User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                // Retrieve cart items and total amount
                 var cartItems = _cartService.GetCart();
                 amount = _cartService.GetTotalAmount();
+
                 var order = new Order
                 {
                     Name = Order.Name,
-                    Email = Order.Email,
+                    Email = userEmail,
                     Phone = Order.Phone,
                     City = Order.City,
                     Region = Order.Region,
@@ -91,6 +106,12 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
                 var savedOrder = await _orderService.CreateOrderAsync(order);
 
                 var session = await _paymentService.CreateCheckoutSessionAsync(order.Email, productName, amount);
+                if (session == null)
+                {
+                    ErrorMessage = "Unable to create checkout session. Please try again.";
+                    return Page();
+                }
+
                 CheckoutSessionId = session.Id;
                 _cartService.ClearCart();
                 return Page();
@@ -98,7 +119,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
             catch (DbUpdateException dbEx)
             {
                 _logger.LogError(dbEx, "An error occurred while saving the order.");
-                ErrorMessage = "An error occurred while saving the order: " + dbEx.InnerException?.Message ?? dbEx.Message;
+                ErrorMessage = "An error occurred while saving the order: " + (dbEx.InnerException?.Message ?? dbEx.Message);
                 return Page();
             }
             catch (Exception ex)

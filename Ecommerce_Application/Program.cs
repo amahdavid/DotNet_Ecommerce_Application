@@ -1,7 +1,9 @@
 using Ecommerce_Application.Configurations;
 using Ecommerce_Application.Data;
+using Ecommerce_Application.Models;
 using Ecommerce_Application.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Serilog;
@@ -9,7 +11,6 @@ using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure Serilog
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .WriteTo.Console()
@@ -18,15 +19,14 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
-    builder.Host.UseSerilog(); // Use Serilog for logging
+    builder.Host.UseSerilog();
 
     // Configure the database context with SQL Server
     builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-    // Configure Identity
-    builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-        .AddEntityFrameworkStores<AppDbContext>();
+    builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>().AddDefaultUI();
 
     // Configure Stripe settings
     builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
@@ -38,9 +38,9 @@ try
     // Configure session
     builder.Services.AddSession(options =>
     {
-        options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
-        options.Cookie.HttpOnly = true; // Keep the session cookie HTTP-only
-        options.Cookie.IsEssential = true; // Make it essential for GDPR purposes
+        options.IdleTimeout = TimeSpan.FromMinutes(30);
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
     });
 
     // Register services
@@ -57,7 +57,7 @@ try
 catch (Exception ex)
 {
     Log.Fatal(ex, "Application start-up failed");
-    throw; // Rethrow the exception to halt the application start-up
+    throw;
 }
 finally
 {
@@ -90,6 +90,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapRazorPages();
 app.MapControllers();
-
-// Start the application
 app.Run();
