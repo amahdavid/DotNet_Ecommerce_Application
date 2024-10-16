@@ -25,8 +25,13 @@ try
     builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-    builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<AppDbContext>().AddDefaultUI();
+    // Configure identity options to disable email confirmation
+    builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+    {
+        options.SignIn.RequireConfirmedAccount = false;
+    })
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultUI();
 
     // Configure Stripe settings
     builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
@@ -44,6 +49,7 @@ try
     });
 
     // Register services
+    builder.Services.AddTransient<IEmailSender, EmailSender>();
     builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
     builder.Services.AddScoped<CartService>();
     builder.Services.AddScoped<OrderService>();
