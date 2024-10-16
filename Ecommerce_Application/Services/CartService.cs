@@ -36,6 +36,7 @@ namespace Ecommerce_Application.Services
             try
             {
                 var cart = GetCart();
+                var isAuthenticated = _contextAccessor.HttpContext.User.Identity.IsAuthenticated;
                 var existingItem = cart.FirstOrDefault(c => c.Product.Id == productId);
 
                 if (existingItem != null)
@@ -50,7 +51,6 @@ namespace Ecommerce_Application.Services
                         cart.Add(new CartItem { Product = product, Quantity = quantity });
                     }
                 }
-
                 SaveCart(cart);
             }
             catch (Exception ex)
@@ -58,6 +58,7 @@ namespace Ecommerce_Application.Services
                 _logger.LogError(ex, "Error adding to cart.");
             }
         }
+
 
         public void RemoveFromCart(Guid productId)
         {

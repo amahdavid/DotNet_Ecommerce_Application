@@ -36,18 +36,30 @@ else
     <form method="post" asp-page-handler="CreateCheckout">
         <div class="form-group">
             <label asp-for="Order.Name">Name</label>
-            <input asp-for="Order.Name" class="form-control" required value="@User.Identity.Name" /> <!-- Pre-fill if logged in -->
+            <input asp-for="Order.Name" class="form-control" />
         </div>
-
         <div class="form-group">
             <label asp-for="Order.Email">Email</label>
-            <input asp-for="Order.Email" type="email" class="form-control" required value="@User.FindFirstValue(ClaimTypes.Email)" /> <!-- Pre-fill if logged in -->
+            <input asp-for="Order.Email" type="email" class="form-control" required value="@User.FindFirstValue(ClaimTypes.Email)" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.Phone">Phone Number</label>
+            <input asp-for="Order.Phone" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.City">City</label>
+            <input asp-for="Order.City" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.Region">Province/State</label>
+            <input asp-for="Order.Region" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Order.PostalCode">Postal Code</label>
+            <input asp-for="Order.PostalCode" class="form-control" />
         </div>
 
-        <!-- Other form fields stay the same for logged-in users -->
-
-        <input type="hidden" name="isGuest" value="false" /> <!-- Indicate logged-in checkout -->
-
+        <input type="hidden" name="isGuest" value="false" />
         <input type="hidden" name="amount" value="@Model.TotalAmount" />
         <input type="hidden" name="productName" value="@string.Join(", ", Model.CartItems.Select(i => i.Product.Name))" />
         <button type="submit" class="btn btn-primary">Pay @Model.TotalAmount.ToString("C")</button>
@@ -63,7 +75,7 @@ else
         </div>
         <div class="form-group">
             <label asp-for="Order.Email">Email</label>
-            <input asp-for="Order.Email" type="email" class="form-control" required />
+            <input asp-for="Order.Email" type="email" class="form-control" required value="" />
         </div>
         <div class="form-group">
             <label asp-for="Order.Phone">Phone Number</label>
@@ -91,7 +103,7 @@ else
         <button type="submit" class="btn btn-primary">Pay @Model.TotalAmount.ToString("C")</button>
     </form>
 
-    <p>Already have an account? <a asp-page="/Account/Login" asp-route-returnUrl="/Payment">Log in and checkout</a></p>
+    <p>Already have an account? <a asp-page="/Account/Login" asp-route-returnUrl="/Identity/Payment/Payment">Log in and checkout</a></p>
 
     @if (Model.CheckoutSessionId != null)
     {

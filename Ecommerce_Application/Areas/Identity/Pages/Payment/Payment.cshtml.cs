@@ -49,7 +49,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
             _contextAccessor = contextAccessor;
             _orderService = orderService;
             _logger = logger;
-            _userManager = userManager; // Assign UserManager
+            _userManager = userManager;
             CartItems = new List<CartItem>();
         }
 
@@ -74,19 +74,13 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Payment
         {
             try
             {
-                // If the user is not a guest and not authenticated, redirect to the login page
                 if (!isGuest && !User.Identity.IsAuthenticated)
                 {
                     return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = "/Identity/Payment" });
                 }
 
-                // Retrieve the user's email
                 var userEmail = isGuest ? Order.Email : User.FindFirstValue(ClaimTypes.Email);
-
-                // Generate a temporary ID for guest users
                 string customerId = isGuest ? Guid.NewGuid().ToString() : User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                // Retrieve cart items and total amount
                 var cartItems = _cartService.GetCart();
                 amount = _cartService.GetTotalAmount();
 

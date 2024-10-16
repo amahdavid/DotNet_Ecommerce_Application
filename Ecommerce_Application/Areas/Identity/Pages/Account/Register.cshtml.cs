@@ -90,6 +90,7 @@ namespace Ecommerce_Application.Areas.Identity.Pages.Account
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         return LocalRedirect(returnUrl);
 
+                        // Email Confirmation Logic
                         /* try
                         {
                             var userId = await _userManager.GetUserIdAsync(user);

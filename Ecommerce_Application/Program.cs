@@ -2,6 +2,7 @@ using Ecommerce_Application.Configurations;
 using Ecommerce_Application.Data;
 using Ecommerce_Application.Models;
 using Ecommerce_Application.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -40,14 +41,28 @@ try
     builder.Services.AddControllersWithViews();
     builder.Services.AddRazorPages();
 
+    builder.Services.ConfigureApplicationCookie(options =>
+    {
+        options.Cookie.Name = ".MyApp.Auth"; // For authentication
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.IsEssential = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+    });
+
     // Configure session
     builder.Services.AddSession(options =>
     {
         options.IdleTimeout = TimeSpan.FromMinutes(30);
         options.Cookie.HttpOnly = true;
         options.Cookie.IsEssential = true;
-    });
+        options.Cookie.Name = ".MyApp.Session"; // For session
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
 
+    });
     // Register services
     builder.Services.AddTransient<IEmailSender, EmailSender>();
     builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
