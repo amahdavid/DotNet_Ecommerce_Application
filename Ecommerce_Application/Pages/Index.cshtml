@@ -3,10 +3,29 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<link rel="stylesheet" href="~/css/main.css" />
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <div class="mt-4">
-        
+        <div class="container">
+            <div class="row">
+                @foreach (var product in Model.Products.Take(5))
+                {
+                    <div class="col-md-4 mb-4">
+                        <!-- Add margin bottom for spacing -->
+                        <div class="card">
+                            <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" />
+                            <div class="card-body">
+                                <h5 class="card-title">@product.Name</h5>
+                                <p class="card-text">Price: @product.Price.ToString("C")</p>
+                                <p class="card-text">@product.Description</p>
+                                <a href="#" class="btn btn-primary">Add to Cart</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
     </div>
 </div>

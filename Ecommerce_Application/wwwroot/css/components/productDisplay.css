@@ -1,0 +1,70 @@
+﻿/* Main product display styling */
+.container {
+    max-width: 1200px; /* Maximum width for the container */
+    margin: auto; /* Center the container */
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -15px; /* Adjust spacing between items */
+}
+
+.col-md-4 {
+    flex: 0 0 33.333%; /* 3 products per row */
+    max-width: 33.333%;
+    padding: 15px; /* Space around each product */
+}
+
+.card {
+    border: none; /* Remove card border */
+    border-radius: 12px; /* Rounded corners */
+    overflow: hidden; /* Prevent overflow of content */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Animation for hover effect */
+}
+
+    .card:hover {
+        transform: translateY(-5px); /* Slightly lift card on hover */
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+    }
+
+.card-img-top {
+    width: 100%; /* Make image responsive */
+    height: auto; /* Maintain aspect ratio */
+    border-bottom: 2px solid #ddd; /* Bottom border for image separation */
+}
+
+.card-body {
+    padding: 20px; /* Padding inside card */
+    text-align: left; /* Align text to the left */
+}
+
+.card-title {
+    font-size: 1.5rem; /* Title size */
+    font-weight: bold; /* Make title bold */
+    margin-bottom: 10px; /* Space below title */
+    color: #333; /* Darker color for title */
+}
+
+.card-text {
+    font-size: 1rem; /* Description size */
+    margin-bottom: 15px; /* Space below description */
+    color: #666; /* Lighter color for text */
+}
+
+.btn {
+    background-color: #007bff; /* Primary button color */
+    border: none; /* Remove border */
+    border-radius: 5px; /* Rounded corners for button */
+    padding: 10px; /* Padding for button */
+    font-size: 1rem; /* Button font size */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .col-md-4 {
+        flex: 0 0 100%; /* Stack products on small screens */
+        max-width: 100%;
+    }
+}
