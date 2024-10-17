@@ -20,7 +20,10 @@
                                 <h5 class="card-title">@product.Name</h5>
                                 <p class="card-text">Price: @product.Price.ToString("C")</p>
                                 <p class="card-text">@product.Description</p>
-                                <a href="#" class="btn btn-primary">Add to Cart</a>
+                                <form method="post" asp-page-handler="AddToCart">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                </form>
                             </div>
                         </div>
                     </div>

@@ -3,6 +3,7 @@
 @import url('./pages/index.css');
 @import url('./components/productDisplay.css');
 @import url('./pages/productListing.css');
+@import url('./pages/payment.css');
 
 html {
     font-size: 14px;
@@ -25,7 +26,7 @@ html {
 
 body {
     margin-bottom: 60px;
-    /*background-image: url('./images/background.jpg');*/ 
+    /*background-image: url('./images/background.jpg');*/
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

@@ -1,0 +1,79 @@
+﻿.total-amount {
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 1.2em;
+}
+
+/* Cart Items Styling */
+.cart-items ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.cart-items li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+}
+
+    /* Image Styling */
+    .cart-items li img {
+        width: 80px;
+        height: 80px;
+        margin-right: 20px;
+        border-radius: 5px;
+    }
+
+
+/* Form Styling */
+form .form-group {
+    margin-bottom: 15px;
+}
+
+form .form-control {
+    border-radius: 5px;
+}
+
+form .btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    form .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+/* Alert Styling */
+.alert {
+    margin-top: 20px;
+}
+
+/* Checkbox Styling */
+.form-check {
+    margin-bottom: 15px;
+}
+
+.form-check-input {
+    margin-right: 10px;
+}
+
+/* Container for checkout and cart items */
+.checkout-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+
+/* Centered content styling */
+.text-center {
+    text-align: center;
+    margin-top: 20px;
+}
