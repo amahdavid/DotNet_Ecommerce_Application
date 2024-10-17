@@ -1,0 +1,124 @@
+﻿/* Product Listing Styles */
+h2 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* Form Styling */
+form {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+    form .form-group {
+        margin-bottom: 15px;
+    }
+
+    form label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    form .form-control {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+/* Button Styling */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+/* Table Styling */
+.table {
+    width: 100%;
+    background-color: #fff;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+    .table thead {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .table th, .table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .table th {
+        font-weight: bold;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+/* No Products Found Message */
+p {
+    font-size: 1.1rem;
+    text-align: center;
+    color: #888;
+}
+
+/* Product Image Styling */
+.product-image {
+    width: 100px; /* Set a fixed width for images */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .form-group {
+        width: 100%;
+    }
+
+    .table {
+        display: block;
+        overflow-x: auto;
+        width: 100%;
+    }
+
+        .table thead, .table tbody, .table th, .table td, .table tr {
+            display: block;
+        }
+
+        .table th, .table td {
+            width: 100%;
+            box-sizing: border-box;
+        }
+}

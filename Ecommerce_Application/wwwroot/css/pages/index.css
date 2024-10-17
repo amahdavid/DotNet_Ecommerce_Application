@@ -1,14 +1,11 @@
-﻿body {
-    background-color: #f8f9fa;
-    font-family: Arial, sans-serif;
-}
+﻿/* This is index.ss located in pages/index.css*/
 
 .text-center {
     padding: 50px 0;
 }
 
 .display-4 {
-    color: #343a40;
+    color: #000000;
     font-weight: bold;
 }
 
@@ -20,6 +17,6 @@
     border: 1px solid #dee2e6;
     border-radius: 5px;
     padding: 30px;
-    background-color: #ffffff;
+    background-color: #000000;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
